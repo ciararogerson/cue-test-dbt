@@ -1,0 +1,49 @@
+name: 'test_analytics'
+version: '1.0.0'
+config-version: 2
+
+profile: 'test_bigquery_profile'
+
+model-paths: ["models"]
+analysis-paths: ["analysis"]
+test-paths: ["tests"]
+seed-paths: ["seed"]
+macro-paths: ["macros"]
+snapshot-paths: ["snapshots"]
+docs-paths: ["docs"]
+asset-paths: ["assets"]
+
+target-path: "target"
+log-path: "logs"
+packages-install-path: "dbt_packages"
+clean-targets:
+  - "target"
+  - "dbt_packages"
+
+vars:
+  cue_source_configs:
+    client_data:
+      connection_type: "bigquery"
+      project: "personal-381013"
+      dataset: "test_source_data"
+
+  metrics_alerting:
+    metrics_model_prefix: "metrics_"
+    exclude_models: ["alerts_processor", "all_metrics", "user_preferences"]
+    weekly_run_day: 2
+    monthly_run_day: 5
+    default_threshold: 10.0
+    default_direction: "decrease"
+    default_frequency: "daily"
+    default_channels: ["slack"]
+    default_priority: "medium"
+
+models:
+  test_analytics:
+    metrics:
+      +materialized: table
+      +tags: ["metrics"]
+
+dispatch:
+  - macro_namespace: dbt
+    search_order: ['test_analytics', 'dbt']
