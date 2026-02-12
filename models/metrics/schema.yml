@@ -1,0 +1,10 @@
+version: 2
+
+sources:
+  - name: client_data
+    description: "E2E test source data"
+    schema: test_source_data
+    database: personal-381013
+    tables:
+      - name: test_sales
+        description: "Toy sales data for pipeline testing"
